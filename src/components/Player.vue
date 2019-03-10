@@ -106,7 +106,7 @@ export default {
       return this.$refs.videoPlayer.player
     },
     isAuthentivated() {
-      return !this.$store.getters.isAuthentivated
+      return this.$store.getters.isAuthentivated
     }
   },
   methods: {
