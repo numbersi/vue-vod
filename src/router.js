@@ -1,25 +1,34 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
-
 Vue.use(Router)
-
-export default new Router({
+const router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes: [
-    {
+  routes: [{
       path: '/',
-      name: 'home',
-      component: Home
+      beforeEnter: async (to, from, next) => {
+        const {
+          token,
+          wd
+        } = to.query
+        if(token){
+          window.localStorage.setItem('Token',token)
+        }
+        if (wd) {
+          next('/index?wd=' + wd)
+        }else{
+          next('/index')
+        }
+      }
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
+      path: '/index',
+      component: resolve => require(['./views/Index.vue'], resolve),
+    },
+    {
+      path: '/vod/:_id',
+      component: resolve => require(['./views/DetailVod.vue'], resolve)
     }
   ]
 })
+export default router

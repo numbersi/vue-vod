@@ -1,0 +1,239 @@
+<template>
+  <div class="page">
+    <!-- <carousel :items="items"></carousel> -->
+    <div style="margin-top: 15px;">
+      <el-input
+        placeholder="请输入内容"
+        v-model="wd"
+        class="input-with-select"
+      >
+        <i
+          slot="prefix"
+          class="el-input__icon el-icon-search"
+        ></i>
+        <el-select
+          v-model="source"
+          slot="prepend"
+          placeholder="请选择"
+        >
+          <el-option
+            v-for="(item,index)  in sources"
+            :key="index"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+
+        </el-select>
+        <el-button
+          slot="append"
+          icon="el-icon-search"
+          @click="searchByWd()"
+        ></el-button>
+      </el-input>
+
+      <div
+        v-for="(video, index) in videos"
+        :key="index"
+      >
+      </div>
+      <el-row class="row">
+        <el-col
+          :span="12"
+          v-for="(video, index) in videos"
+          :key="index"
+        >
+          <el-card class="box-card">
+            <div>
+              <span>{{video.name}}</span>
+            </div>
+            <el-tag
+              type="danger"
+              size="small"
+            >{{ video.type }}</el-tag>
+            <el-tag
+              type="danger"
+              size="mini"
+            >{{video.note }}</el-tag>
+            <div>
+              <el-button
+                solt="footer"
+                type="primary"
+                icon="el-icon-caret-right"
+                @click="play(video)"
+              >播放</el-button>
+            </div>
+          </el-card>
+        </el-col>
+      </el-row>
+    </div>
+
+    <player
+      :visible.sync="dialogVisible"
+      :item="chooseedItem"
+    ></player>
+  </div>
+
+</template>
+
+<script>
+import Player from '../components/Player';
+import urlPares from 'url-parse'
+
+export default {
+  data() {
+    return {
+      items: [],
+      videos: [],
+      dialogVisible: false,
+      chooseedItem: {},
+      wd: '',
+      source: "/zuida",
+      sources: [
+        {
+          label: '资源1',
+          value: '/zuida'
+        }, {
+          label: '资源2',
+          value: '/kuyun'
+        }
+      ],
+      isAuthentivated: this.$store.getters.isAuthentivated
+
+    }
+  },
+  components: { Player },
+
+  async created() {
+    const { wd } = urlPares(location.href, true).query || this.$route.params
+    console.log(urlPares(location.href, true).query)
+    console.log(this.$route.params)
+    console.log(wd)
+    if (wd) {
+      this.wd = wd
+      this.searchByWd(wd)
+    } else {
+      this.get24h()
+    }
+    window.document.title = '飛鳥'
+    this.$store.dispatch('setLogin')
+    console.log(' this.$store.getters :', this.$store.getters);
+  },
+
+  methods: {
+    play(video) {
+      const id = video.id
+      let storageKey = id + '-' + this.source
+      let storage = window.localStorage.getItem(storageKey)
+      if (storage) {
+        this.dialogVisible = true
+        this.chooseedItem = JSON.parse(storage)
+      } else {
+        this.$axios.get(this.source + '?ac=videolist&t=&pg=&h=&wd=&ids=' + id).then(async (result) => {
+          let a = await this.xml.searchXML(result.data)
+          let videoDatay = a.video[0]
+          console.log('videsoDatey :', videoDatay);
+          if (videoDatay.note.indexOf('全') != -1) {
+            window.localStorage.setItem(storageKey, JSON.stringify(videoDatay))
+          }
+          this.dialogVisible = true
+          this.chooseedItem = videoDatay
+        })
+      }
+    },
+    async get24h() {
+      let storageKey = 'get24h' + this.source
+      let storage = window.localStorage.getItem(storageKey)
+
+      let get_at = window.localStorage.get_at
+      const nowTime = new Date().getTime()
+      console.log('nowTime-get_at', nowTime - get_at);
+      if (storage && get_at && nowTime - get_at < 360000) {
+        return this.videos = JSON.parse(storage)
+      }
+      this.$axios.get(this.source + '?ac=list&h=24').then(async (result) => {
+        let a = await this.xml.searchXML(result.data)
+        this.videos = a.video
+        window.localStorage.setItem(storageKey, JSON.stringify(a.video))
+        window.localStorage.setItem('get_at', nowTime)
+
+      })
+    },
+    searchByWd(wd = this.wd) {
+      console.log(wd)
+      this.$axios.get(this.source + '?ac=list&t=&pg=1&h=&ids=&wd=' + wd).then(async (result) => {
+        let a = await this.xml.searchXML(result.data)
+        console.log('a :', a);
+        this.videos = a.video
+      })
+    }
+  },
+  watch: {
+    source(n) {
+      if (n) {
+        if (this.wd) {
+          this.searchByWd()
+        } else {
+          this.get24h(n)
+        }
+      }
+    }
+  }
+}
+</script>
+
+<style scoped>
+.page {
+  background: rgb(211, 255, 202);
+}
+.video {
+  margin-top: 4%;
+  display: flex;
+  height: 46px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+  flex-wrap: wrap;
+  align-content: center;
+  align-items: flex-end;
+}
+.type {
+}
+.row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.box-card {
+  margin: 10px 5px;
+}
+.time {
+  font-size: 13px;
+  color: #999;
+}
+
+.bottom {
+  margin-top: 13px;
+  line-height: 12px;
+}
+
+.button {
+  padding: 0;
+  float: right;
+}
+
+.image {
+  margin-top: 5%;
+  width: 100%;
+  object-fit: fill;
+  display: block;
+}
+
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
+
+.clearfix:after {
+  clear: both;
+}
+</style>
