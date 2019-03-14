@@ -94,6 +94,13 @@ export default {
       // this.playerOptions.poster = n.pic.join('')
       window.document.title = n.name + n.playList[0].title
 
+      this.wxApi.ready({
+        title: window.document.title,
+        desc: '免费在线观看，速来围观',
+        link: window.location.href+'?wd='+n.name,
+        imgUrl: n.pic
+      })
+
     },
     visible(n) {
       this.visibleValue = n
