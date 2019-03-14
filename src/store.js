@@ -28,22 +28,11 @@ export default new Vuex.Store({
   actions: {
     setLogin({
       commit
-    }) {
-      const token = window.localStorage.Token
-      if (token) {
-        try {
-          var decoded = decodeJWT(token)
-          console.log(decoded);
-
-          console.log(' window.localStorage.Token :', window.localStorage.Token);
+    },decoded) {
+      if (decoded) {
           commit('SET_AUTHENTICATED', true)
           commit('SET_WX', decoded)
-        } catch (error) {
-          console.log('error :', error);
-        }
-
       }
-
     }
   }
 })

@@ -77,6 +77,7 @@
 <script>
 import Player from '../components/Player';
 import urlPares from 'url-parse'
+import decodeJWT from 'jwt-decode';
 
 export default {
   data() {
@@ -85,7 +86,6 @@ export default {
       videos: [],
       dialogVisible: false,
       chooseedItem: {},
-      wd: this.$store.getters.wd,
       source: "/zuida",
       sources: [
         {
@@ -96,17 +96,21 @@ export default {
           value: '/kuyun'
         }
       ],
-      isAuthentivated: this.$store.getters.isAuthentivated
-
+      isAuthentivated: this.$store.getters.isAuthentivated,
+      wd:this.$store.getters.wd
     }
   },
   components: { Player },
 
   async created() {
-    const { wd } = urlPares(location.href, true).query || this.$route.params
-    console.log(urlPares(location.href, true).query)
-    console.log(this.$route.params)
-    console.log(wd)
+         const token = window.localStorage.Token
+      if (token) {
+          var decoded = decodeJWT(token)
+          console.log(decoded);
+
+          console.log(' window.localStorage.Token :', window.localStorage.Token)
+        }
+    let wd = decoded.wd
     if (wd) {
       this.wd = wd
       this.searchByWd(wd)
@@ -114,8 +118,7 @@ export default {
       this.get24h()
     }
     window.document.title = '飛鳥'
-    this.$store.dispatch('setLogin')
-    console.log(' this.$store.getters :', this.$store.getters);
+    this.$store.dispatch('setLogin',decoded)
 
 
     window.onscroll = function() {
