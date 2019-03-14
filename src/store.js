@@ -12,7 +12,8 @@ export default new Vuex.Store({
   getters: {
     //获取数据的方法
     isAuthentivated: state => state.isAuthenticated,
-    wx: state => state.wx,
+    openid: state => state.wx.openid,
+    wd:state => state.wx.wd
   },
   mutations: {
     SET_AUTHENTICATED(state, isAuthenticated) {

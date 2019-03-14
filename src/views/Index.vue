@@ -85,7 +85,7 @@ export default {
       videos: [],
       dialogVisible: false,
       chooseedItem: {},
-      wd: '',
+      wd: this.$store.getters.wd,
       source: "/zuida",
       sources: [
         {
