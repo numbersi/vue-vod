@@ -5,6 +5,8 @@ import router from './router'
 import store from './store'
 import './plugins/element.js'
 import xml from './utils/xml'
+import wxApi from './utils/wx.jsapi'
+
 Vue.config.productionTip = false
 
 var _hmt = _hmt || [];
@@ -16,6 +18,7 @@ window._hmt = _hmt; // 必须把_hmt挂载到window下，否则找不到
   s.parentNode.insertBefore(hm, s);
 })();
 Vue.prototype.xml = xml
+Vue.prototype.wxApi = wxApi
 new Vue({
   router,
   store,

@@ -1,13 +1,16 @@
 // const parser = require('fast-xml-parser')
 class vodxml {
   static async searchXML(data) {
+    console.log(data)
     const content = await parseXML(data)
+   const pagecount = /pagecount="(.*?)"/.exec(data)[1]
     console.log(content)
     const list_video = content.rss.list
     if (list_video.video) {
       let video = filtration(list_video)
       return {
-        video
+        video,
+        pagecount
       }
     }
     return {
@@ -33,14 +36,7 @@ const filtration = (list_video) => {
   return list_video.video
 }
 const parseXML = xml => {
-  // return new Promise((resolve, reject) => {
-  //   xml2js.parseString(xml, {trim: true}, (err, content) => {
-  //     if (err) reject(err)
-  //     else resolve(content)
-  //   })
-  // })
-  // return parser.parse(xml)
-  // console.log()
+
   // eslint-disable-next-line no-undef
   return parser.parse(xml)
 }

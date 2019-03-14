@@ -29,6 +29,9 @@ export default {
   components: {
   },
 
+  mounted() {
+    this.wxApi.wxShowMenu();
+  }
 }
 </script>
 

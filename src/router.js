@@ -5,25 +5,22 @@ const router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [{
-      path: '/',
+      path: '/index',
+      component: resolve => require(['./components/IndexLayout.vue'], resolve),
       beforeEnter: async (to, from, next) => {
         const {
           token,
-          wd
         } = to.query
-        if(token){
-          window.localStorage.setItem('Token',token)
+        if (token) {
+          window.localStorage.setItem('Token', token)
         }
-        if (wd) {
-          next('/index?wd=' + wd)
-        }else{
-          next('/index')
-        }
-      }
-    },
-    {
-      path: '/index',
-      component: resolve => require(['./views/Index.vue'], resolve),
+        next()
+
+      },
+      children: [{
+        path: '/',
+        component: resolve => require(['./views/Index.vue'], resolve),
+      }]
     },
     {
       path: '/vod/:_id',

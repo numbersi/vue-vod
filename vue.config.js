@@ -33,6 +33,9 @@ module.exports = {
     }
   },
   productionSourceMap: false,
+  outputDir:'D:/code/koa/server/public',
+  assetsDir:'index',
+  indexPath:"D:/code/koa/server/views/index.html",
   devServer: {
     proxy: { // 配置跨域
       '/api': {
