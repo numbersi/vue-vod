@@ -1,10 +1,8 @@
 // const parser = require('fast-xml-parser')
 class vodxml {
   static async searchXML(data) {
-    console.log(data)
     const content = await parseXML(data)
    const pagecount = /pagecount="(.*?)"/.exec(data)[1]
-    console.log(content)
     const list_video = content.rss.list
     if (list_video.video) {
       let video = filtration(list_video)

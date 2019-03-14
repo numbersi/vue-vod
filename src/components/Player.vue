@@ -79,12 +79,15 @@ export default {
   watch: {
     item(n) {
       let playList = []
-      n.dl.dd.split('#').forEach(element => {
-        const elementArr = element.split('$')
-        // playList[elementArr[0]] = elementArr[1]
-        playList.push({ title: elementArr[0], src: elementArr[1] })
-      });
-      n.playList = playList.reverse()
+      console.log(n)
+      if (n.dl) {
+        n.dl.dd.split('#').forEach(element => {
+          const elementArr = element.split('$')
+          // playList[elementArr[0]] = elementArr[1]
+          playList.push({ title: elementArr[0], src: elementArr[1] })
+        });
+        n.playList = playList.reverse()
+      }
       this.playerOptions.sources = [{
         type: 'application/x-mpegURL',
         src: n.playList[0].src
@@ -97,7 +100,7 @@ export default {
       this.wxApi.ready({
         title: window.document.title,
         desc: '免费在线观看，速来围观',
-        link: window.location.href+'?wd='+n.name,
+        link: window.location.href + '?wd=' + n.name,
         imgUrl: n.pic
       })
 

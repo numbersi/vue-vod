@@ -10,7 +10,7 @@ export default {
     axios.post('/api/signature').then(function (res) {
       var getMsg = res.data.data;
       let config = {
-        debug: true, //生产环境需要关闭debug模式
+        debug: false, //生产环境需要关闭debug模式
         appId: getMsg.appId, //appId通过微信服务号后台查看
         timestamp: getMsg.timestamp, //生成签名的时间戳
         nonceStr: getMsg.noncestr, //生成签名的随机字符串
