@@ -13,8 +13,11 @@ const router = new Router({
         } = to.query
         if (token) {
           window.localStorage.setItem('Token', token)
+          to.query.token=null
+          next('/index')
+        }else{
+          next()
         }
-        next()
 
       },
       children: [{

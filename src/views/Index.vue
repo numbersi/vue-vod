@@ -109,7 +109,7 @@ export default {
       console.log(decoded);
     }
     //获取 wd token 或者 转发中的wd
-    let wd = decoded.wd || urlPares(window.location.href, true).query.wd
+    let wd = urlPares(window.location.href, true).query.wd ||decoded.wd
     console.log('wd :', wd);
     if (wd) {
       this.wd = wd
