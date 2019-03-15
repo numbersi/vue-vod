@@ -146,7 +146,12 @@ export default {
       }]
 
       this.playTitle = playItem.title
-
+      this.wxApi.ready({
+        title: window.document.title,
+        desc: '免费在线观看，速来围观',
+        link: window.location.href + '?wd=' +this.item.name,
+        imgUrl: this.item.pic
+      })
     }
   }
 }

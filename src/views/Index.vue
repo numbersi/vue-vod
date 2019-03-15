@@ -78,7 +78,6 @@
 import Player from '../components/Player';
 import urlPares from 'url-parse'
 import decodeJWT from 'jwt-decode';
-
 export default {
   data() {
     return {
@@ -97,31 +96,30 @@ export default {
         }
       ],
       isAuthentivated: this.$store.getters.isAuthentivated,
-      wd:this.$store.getters.wd
+      wd: ''
     }
   },
   components: { Player },
-
   async created() {
-         const token = window.localStorage.Token
-      if (token) {
-          var decoded = decodeJWT(token)
-          console.log(decoded);
-
-          console.log(' window.localStorage.Token :', window.localStorage.Token)
-        }
-    let wd = decoded.wd
+    // 解析token
+    const token = window.localStorage.Token
+    let decoded = ''
+    if (token) {
+      decoded = decodeJWT(token)
+      console.log(decoded);
+    }
+    //获取 wd token 或者 转发中的wd
+    let wd = decoded.wd || urlPares(window.location.href, true).query.wd
+    console.log('wd :', wd);
     if (wd) {
       this.wd = wd
       this.searchByWd(wd)
     } else {
       this.get24h()
     }
-    window.document.title = '飛鳥'
-    this.$store.dispatch('setLogin',decoded)
-
-
-    window.onscroll = function() {
+    this.wd = wd
+    this.$store.dispatch('setLogin', decoded)
+    window.onscroll = function () {
       //变量scrollTop是滚动条滚动时，距离顶部的距离
       var scrollTop =
         document.documentElement.scrollTop || document.body.scrollTop; //变量windowHeight是可视区的高度
@@ -131,14 +129,14 @@ export default {
         document.documentElement.scrollHeight || document.body.scrollHeight; //滚动条到底部的条件
       if (scrollTop + windowHeight == scrollHeight) {
         //写后台加载数据的函数
-    
+
         console.log(
           "距顶部" +
-            scrollTop +
-            "可视区高度" +
-            windowHeight +
-            "滚动条总高度" +
-            scrollHeight
+          scrollTop +
+          "可视区高度" +
+          windowHeight +
+          "滚动条总高度" +
+          scrollHeight
         );
         // 記載数据
 
@@ -204,11 +202,13 @@ export default {
           this.get24h(n)
         }
       }
+    },
+    dialogVisible(n) {
+      if (!n) { window.document.title = '飛鳥' }
     }
   }
 }
 </script>
-
 <style scoped>
 .page {
   background: rgb(211, 255, 202);

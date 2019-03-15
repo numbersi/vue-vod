@@ -80,6 +80,8 @@ export default {
   },
 
   ready: function ({title,desc,link,imgUrl}) {
+    console.log({title,desc,link,imgUrl})
+
     wx.ready(function () { //需在用户可能点击分享按钮前就先调用
       wx.onMenuShareAppMessage({
         title, // 分享标题

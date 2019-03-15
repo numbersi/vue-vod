@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import decodeJWT from 'jwt-decode';
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -13,7 +12,6 @@ export default new Vuex.Store({
     //获取数据的方法
     isAuthentivated: state => state.isAuthenticated,
     openid: state => state.wx.openid,
-    wd:state => state.wx.wd
   },
   mutations: {
     SET_AUTHENTICATED(state, isAuthenticated) {
