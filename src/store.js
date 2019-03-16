@@ -30,6 +30,9 @@ export default new Vuex.Store({
       if (decoded) {
           commit('SET_AUTHENTICATED', true)
           commit('SET_WX', decoded)
+      }else{
+        commit('SET_AUTHENTICATED', false)
+        commit('SET_WX', {})
       }
     }
   }

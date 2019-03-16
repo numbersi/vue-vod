@@ -29,41 +29,7 @@
           @click="searchByWd()"
         ></el-button>
       </el-input>
-
-      <div
-        v-for="(video, index) in videos"
-        :key="index"
-      >
-      </div>
-      <el-row class="row">
-        <el-col
-          :span="12"
-          v-for="(video, index) in videos"
-          :key="index"
-        >
-          <el-card class="box-card">
-            <div>
-              <span>{{video.name}}</span>
-            </div>
-            <el-tag
-              type="danger"
-              size="small"
-            >{{ video.type }}</el-tag>
-            <el-tag
-              type="danger"
-              size="mini"
-            >{{video.note }}</el-tag>
-            <div>
-              <el-button
-                solt="footer"
-                type="primary"
-                icon="el-icon-caret-right"
-                @click="play(video)"
-              >播放</el-button>
-            </div>
-          </el-card>
-        </el-col>
-      </el-row>
+    <videos  :videos="videos"  v-on:play="play"/>
     </div>
 
     <player
@@ -76,6 +42,7 @@
 
 <script>
 import Player from '../components/Player';
+import Videos from '../components/Videos';
 import urlPares from 'url-parse'
 import decodeJWT from 'jwt-decode';
 export default {
@@ -99,7 +66,7 @@ export default {
       wd: ''
     }
   },
-  components: { Player },
+  components: { Player, Videos },
   async created() {
     // 解析token
     const token = window.localStorage.Token
@@ -109,7 +76,7 @@ export default {
       console.log(decoded);
     }
     //获取 wd token 或者 转发中的wd
-    let wd = urlPares(window.location.href, true).query.wd ||decoded.wd
+    let wd = urlPares(window.location.href, true).query.wd || decoded.wd
     console.log('wd :', wd);
     if (wd) {
       this.wd = wd
