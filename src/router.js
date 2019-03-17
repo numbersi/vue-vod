@@ -59,10 +59,10 @@ const router = new Router({
         },
       ]
     },
-    {
-      path: '/vod/:_id',
-      component: resolve => require(['./views/DetailVod.vue'], resolve)
-    }
+    // {
+    //   path: '/vod/:_id',
+    //   component: resolve => require(['./views/DetailVod.vue'], resolve)
+    // }
   ]
 })
 export default router

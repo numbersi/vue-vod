@@ -29,7 +29,10 @@
           @click="searchByWd()"
         ></el-button>
       </el-input>
-    <videos  :videos="videos"  v-on:play="play"/>
+      <videos
+        :videos="videos"
+        v-on:play="play"
+      />
     </div>
 
     <player
@@ -68,6 +71,7 @@ export default {
   },
   components: { Player, Videos },
   async created() {
+    console.log('windos :', window.location.href);
     // 解析token
     const token = window.localStorage.Token
     let decoded = ''
@@ -96,7 +100,6 @@ export default {
         document.documentElement.scrollHeight || document.body.scrollHeight; //滚动条到底部的条件
       if (scrollTop + windowHeight == scrollHeight) {
         //写后台加载数据的函数
-
         console.log(
           "距顶部" +
           scrollTop +
