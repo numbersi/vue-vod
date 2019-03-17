@@ -71,6 +71,7 @@ export default {
   },
   components: { Player, Videos },
   async created() {
+    this.wxApi.wxShowMenu();
     console.log('windos :', window.location.href);
     // 解析token
     const token = window.localStorage.Token

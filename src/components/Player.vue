@@ -100,7 +100,7 @@ export default {
       this.wxApi.ready({
         title: window.document.title,
         desc: '免费在线观看，速来围观',
-        link: window.location.href + '?wd=' + n.name,
+        link: window.location.href,
         imgUrl: n.pic
       })
 
@@ -110,7 +110,6 @@ export default {
     }
   },
   created() {
-    this.wxApi.wxShowMenu();
   },
   components: { videoPlayer },
   computed: {
@@ -133,20 +132,14 @@ export default {
       }
     },
     close() {
-
-      console.log(this.player);
-
       this.$emit('update:visible', false)
       this.player.pause()
-
     },
     chooseNum(playItem) {
-
       this.playerOptions.sources = [{
         type: 'application/x-mpegURL',
         src: playItem.src
       }]
-
       this.playTitle = playItem.title
       this.wxApi.ready({
         title: window.document.title,
