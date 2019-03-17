@@ -109,7 +109,9 @@ export default {
       this.visibleValue = n
     }
   },
-
+  created() {
+    this.wxApi.wxShowMenu();
+  },
   components: { videoPlayer },
   computed: {
     player() {
@@ -149,7 +151,7 @@ export default {
       this.wxApi.ready({
         title: window.document.title,
         desc: '免费在线观看，速来围观',
-        link: window.location.href ,
+        link: window.location.href,
         imgUrl: this.item.pic
       })
     }

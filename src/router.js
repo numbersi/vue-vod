@@ -46,7 +46,7 @@ const router = new Router({
                 next('/index/search?wd=' + decoded.wd)
               }
             }
-            next()
+            next('/index')
           }
         },
         {
