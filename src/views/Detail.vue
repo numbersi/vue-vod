@@ -152,7 +152,9 @@ export default {
   },
   methods: {
     goBack() {
-      if (this.$router.history.current.path !== this.$router.path) {
+      console.log('this.$router.history.current.path :', this.$router.history.current.path);
+      console.log('this.$router.path :', this.$router.path);
+      if (this.$router.path) {
         return this.$router.go(-1)
       }
       this.$router.push('/index')
