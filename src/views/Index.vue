@@ -44,14 +44,13 @@ export default {
   },
   components: { Videos, SearchBar },
   async created() {
+    window.share_config = {
+      title: '飛鳥 -免费在线观看', // 分享标题
+      desc: '最新电影电视剧综艺韩剧美剧日剧泰剧，免费在线观看', // 分享描述
+      link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+      imgUrl: 'http://ww1.sinaimg.cn/large/6485c65ely1g15lyqgvjtj209k09kq2v.jpg', // 分享图标
+    }
     this.wxApi.wxShowMenu();
-    this.wxApi.ready({
-      title: window.document.title, // 分享标题
-      desc: '免费在线观看，速来围观',// 分享描述
-      link: window.location.href,// 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-      imgUrl: this.item.pic// 分享图标
-    })
-
     this.get24h()
     window.onscroll = function () {
       //变量scrollTop是滚动条滚动时，距离顶部的距离
