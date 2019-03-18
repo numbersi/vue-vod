@@ -29,16 +29,47 @@
         </el-card>
       </el-col>
     </el-row>
+    <player
+      :visible.sync="dialogVisible"
+      :item="chooseedItem"
+    ></player>
   </div>
+
 </template>
 
 <script>
+import Player from '../components/Player';
+
 export default {
 
-  props: ['videos'],
+  props: ['videos', 'source'],
+  components: { Player },
+  data() {
+    return {
+      dialogVisible: false,
+      chooseedItem: {}
+    }
+  },
   methods: {
     play(video) {
-      this.$emit('play', video);
+      this.$router.push(`/index/detail?id=${video.id}&source=${this.source||this.$store.getters.source}`)
+      // let storageKey = id + '-' + this.source
+      // let storage = window.localStorage.getItem(storageKey)
+      // if (storage) {
+      //   this.dialogVisible = true
+      //   this.chooseedItem = JSON.parse(storage)
+      // } else {
+      //   this.$axios.get(this.source + '?ac=videolist&t=&pg=&h=&wd=&ids=' + id).then(async (result) => {
+      //     let a = await this.xml.searchXML(result.data)
+      //     let videoDatay = a.video[0]
+      //     console.log('videsoDatey :', videoDatay);
+      //     if (videoDatay.note.indexOf('全') != -1) {
+      //       window.localStorage.setItem(storageKey, JSON.stringify(videoDatay))
+      //     }
+      //     this.dialogVisible = true
+      //     this.chooseedItem = videoDatay
+      //   })
+      // }
     }
   }
 }
@@ -53,7 +84,7 @@ export default {
 
 .box-card {
   margin: 10px 5px;
-  min-height:164px; 
-  max-height:164px; 
+  min-height: 164px;
+  max-height: 164px;
 }
 </style>

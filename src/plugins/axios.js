@@ -64,7 +64,7 @@ _axios.interceptors.response.use(
   function (error) {
     // Do something with response error
     endLoading()
-    Message.error('token值无效，请重新登录')
+    // Message.error('token值无效，请重新登录')
     return Promise.reject(error);
   }
 );

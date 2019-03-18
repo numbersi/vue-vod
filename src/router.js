@@ -43,10 +43,15 @@ const router = new Router({
                 window.localStorage.setItem('Token', token)
               }
               if (decoded.wd) {
-                next('/index/search?wd=' + decoded.wd)
+                store.dispatch('setValue', {
+                  title: 'wd',
+                  value: decoded.wd
+                })
+                next('/index/search')
+              } else {
+                next('/index')
               }
             }
-            next('/index')
           }
         },
         {
@@ -54,8 +59,14 @@ const router = new Router({
           component: resolve => require(['./views/Index.vue'], resolve),
         },
         {
+          name: 'search',
           path: 'search',
-          component: resolve => require(['./views/Index.vue'], resolve),
+          component: resolve => require(['./views/Search.vue'], resolve),
+        },
+        {
+          name: 'detail',
+          path: 'detail',
+          component: resolve => require(['./views/Detail.vue'], resolve),
         },
       ]
     },

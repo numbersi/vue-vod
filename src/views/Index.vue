@@ -1,53 +1,21 @@
 <template>
   <div class="page">
     <!-- <carousel :items="items"></carousel> -->
-    <div style="margin-top: 15px;">
-      <el-input
-        placeholder="请输入内容"
-        v-model="wd"
-        class="input-with-select"
-      >
-        <i
-          slot="prefix"
-          class="el-input__icon el-icon-search"
-        ></i>
-        <el-select
-          v-model="source"
-          slot="prepend"
-          placeholder="请选择"
-        >
-          <el-option
-            v-for="(item,index)  in sources"
-            :key="index"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
-        </el-select>
-        <el-button
-          slot="append"
-          icon="el-icon-search"
-          @click="searchByWd()"
-        ></el-button>
-      </el-input>
+    <div>
+      <search-bar v-on:searchByWd="searchByWd"></search-bar>
       <videos
         :videos="videos"
-        v-on:play="play"
+        :source="source"
       />
     </div>
 
-    <player
-      :visible.sync="dialogVisible"
-      :item="chooseedItem"
-    ></player>
   </div>
 
 </template>
 
 <script>
-import Player from '../components/Player';
 import Videos from '../components/Videos';
-import urlPares from 'url-parse'
-import decodeJWT from 'jwt-decode';
+import SearchBar from '../components/SearchBar';
 export default {
   data() {
     return {
@@ -55,7 +23,6 @@ export default {
       videos: [],
       dialogVisible: false,
       chooseedItem: {},
-      source: "/zuida",
       sources: [
         {
           label: '资源1',
@@ -66,31 +33,26 @@ export default {
         }
       ],
       isAuthentivated: this.$store.getters.isAuthentivated,
-      wd: ''
+      wd: '',
+    }
+
+  },
+  computed: {
+    source() {
+      return this.$store.getters.source
     }
   },
-  components: { Player, Videos },
+  components: { Videos, SearchBar },
   async created() {
+    window.share_config = {
+      title: '飛鳥 -免费在线观看几万部视频', // 分享标题
+      desc: '最新电影电视剧综艺韩剧美剧日剧泰剧，免费在线观看', // 分享描述
+      link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+      imgUrl: 'http://ww1.sinaimg.cn/large/6485c65ely1g15lyqgvjtj209k09kq2v.jpg', // 分享图标
+    }
     this.wxApi.wxShowMenu();
-    console.log('windos :', window.location.href);
-    // 解析token
-    const token = window.localStorage.Token
-    let decoded = ''
-    if (token) {
-      decoded = decodeJWT(token)
-      console.log(decoded);
-    }
-    //获取 wd token 或者 转发中的wd
-    let wd = urlPares(window.location.href, true).query.wd || decoded.wd
-    console.log('wd :', wd);
-    if (wd) {
-      this.wd = wd
-      this.searchByWd(wd)
-    } else {
-      this.get24h()
-    }
-    this.wd = wd
-    this.$store.dispatch('setLogin', decoded)
+
+    this.get24h()
     window.onscroll = function () {
       //变量scrollTop是滚动条滚动时，距离顶部的距离
       var scrollTop =
@@ -116,37 +78,15 @@ export default {
   },
 
   methods: {
-    play(video) {
-      const id = video.id
-      let storageKey = id + '-' + this.source
+    async get24h(source = this.source) {
+      let storageKey = 'get24h' + source
       let storage = window.localStorage.getItem(storageKey)
-      if (storage) {
-        this.dialogVisible = true
-        this.chooseedItem = JSON.parse(storage)
-      } else {
-        this.$axios.get(this.source + '?ac=videolist&t=&pg=&h=&wd=&ids=' + id).then(async (result) => {
-          let a = await this.xml.searchXML(result.data)
-          let videoDatay = a.video[0]
-          console.log('videsoDatey :', videoDatay);
-          if (videoDatay.note.indexOf('全') != -1) {
-            window.localStorage.setItem(storageKey, JSON.stringify(videoDatay))
-          }
-          this.dialogVisible = true
-          this.chooseedItem = videoDatay
-        })
-      }
-    },
-    async get24h() {
-      let storageKey = 'get24h' + this.source
-      let storage = window.localStorage.getItem(storageKey)
-
       let get_at = window.localStorage.get_at
       const nowTime = new Date().getTime()
-      console.log('nowTime-get_at', nowTime - get_at);
       if (storage && get_at && nowTime - get_at < 360000) {
         return this.videos = JSON.parse(storage)
       }
-      this.$axios.get(this.source + '?ac=list&h=24').then(async (result) => {
+      this.$axios.get(source + '?ac=list&h=24').then(async (result) => {
         let a = await this.xml.searchXML(result.data)
         console.log('a :', a);
         this.videos = a.video
@@ -155,17 +95,17 @@ export default {
 
       })
     },
-    searchByWd(wd = this.wd) {
-      console.log(wd)
-      this.$axios.get(this.source + '?ac=list&t=&pg=1&h=&ids=&wd=' + wd).then(async (result) => {
-        let a = await this.xml.searchXML(result.data)
-        console.log('a :', a);
-        this.videos = a.video
-      })
+    searchByWd(data) {
+      console.log(data.wd)
+      // this.$router.push({ name: 'search', params: { wd:'sss' } })
+      this.$router.push(`/index/search`)
+      // this.$store.dispatch('setValue', { title: 'wd', value: wd })
+
     }
   },
   watch: {
     source(n) {
+      console.log('n :', n);
       if (n) {
         if (this.wd) {
           this.searchByWd()
