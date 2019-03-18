@@ -50,7 +50,6 @@ export default {
       link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
       imgUrl: 'http://ww1.sinaimg.cn/large/6485c65ely1g15lyqgvjtj209k09kq2v.jpg', // 分享图标
     }
-    this.wxApi.wxShowMenu();
     this.get24h()
     window.onscroll = function () {
       //变量scrollTop是滚动条滚动时，距离顶部的距离
