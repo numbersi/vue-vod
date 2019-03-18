@@ -102,12 +102,12 @@ export default {
       this.playerOptions.poster = n.pic
       this.playTitle = n.playList[0].title
       window.document.title = n.name + n.playList[0].title
-      window.share_config = {
+      this.wxApi.ready({
         title: window.document.title, // 分享标题
         desc: '免费在线观看，速来围观',// 分享描述
         link: window.location.href,// 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-        imgUrl: n.pic// 分享图标
-      }
+        imgUrl: this.item.pic// 分享图标
+      })
     },
     visible(n) {
       this.visibleValue = n
@@ -132,14 +132,14 @@ export default {
         this.item = videoDatay
       })
     }
-
-
-    window.share_config = {
+    this.wxApi.ready({
       title: window.document.title, // 分享标题
       desc: '免费在线观看，速来围观',// 分享描述
       link: window.location.href,// 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
       imgUrl: this.item.pic// 分享图标
-    }
+    })
+
+
   },
   components: { videoPlayer },
   computed: {
