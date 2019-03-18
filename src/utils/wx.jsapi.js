@@ -6,7 +6,10 @@ const jsApiList = ['onMenuShareAppMessage',
 // import wx from 'wx-js-sdk'
 export default {
   wxShowMenu: async function () {
-    const res = await axios.post('/api/signature')
+    console.log('object :', window.location.href);
+    const res = await axios.post('/api/signature', {
+      url: window.location.href
+    })
     let getMsg = res.data.data;
     let config = {
       debug: false, //生产环境需要关闭debug模式

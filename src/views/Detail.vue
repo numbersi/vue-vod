@@ -114,6 +114,7 @@ export default {
     }
   },
   created() {
+    this.wxApi.wxShowMenu()
     const { id, source } = this.$route.query
     let storageKey = id + '-' + source
     let storage = window.localStorage.getItem(storageKey)
